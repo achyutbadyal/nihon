@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +32,7 @@ import kotlin.math.min
 internal class HttpPageLoader(
     private val chapter: ReaderChapter,
     private val source: HttpSource,
+    private val preferences: ReaderPreferences = Injekt.get(),
     private val chapterCache: ChapterCache = Injekt.get(),
 ) : PageLoader() {
 
@@ -41,7 +43,7 @@ internal class HttpPageLoader(
      */
     private val queue = PriorityBlockingQueue<PriorityPage>()
 
-    private val preloadSize = 4
+    private val preloadSize = preferences.preloadSize().get()
 
     init {
         scope.launchIO {

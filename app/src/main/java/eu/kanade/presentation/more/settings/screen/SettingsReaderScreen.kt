@@ -170,6 +170,9 @@ object SettingsReaderScreen : SearchableSettings {
 
     @Composable
     private fun getReadingGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val preloadSize by readerPreferences.preloadSize().collectAsState()
+        val preloadChapterThreshold by readerPreferences.preloadChapterThreshold().collectAsState()
+
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_reading),
             preferenceItems = persistentListOf(
@@ -188,6 +191,22 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.alwaysShowChapterTransition(),
                     title = stringResource(MR.strings.pref_always_show_chapter_transition),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = preloadSize,
+                    valueRange = 1..20,
+                    title = stringResource(MR.strings.pref_preload_pages),
+                    valueString = pluralStringResource(MR.plurals.pref_pages, preloadSize, preloadSize),
+                    onValueChanged = { readerPreferences.preloadSize().set(it) },
+                    defaultValue = 4,
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = preloadChapterThreshold,
+                    valueRange = 1..10,
+                    title = stringResource(MR.strings.pref_preload_next_chapter_threshold),
+                    valueString = pluralStringResource(MR.plurals.pref_pages, preloadChapterThreshold, preloadChapterThreshold),
+                    onValueChanged = { readerPreferences.preloadChapterThreshold().set(it) },
+                    defaultValue = 5,
                 ),
             ),
         )

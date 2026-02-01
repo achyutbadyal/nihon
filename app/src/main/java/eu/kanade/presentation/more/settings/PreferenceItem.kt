@@ -5,6 +5,8 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -54,6 +56,7 @@ fun StatusWrapper(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun PreferenceItem(
     item: Preference.PreferenceItem<*, *>,
@@ -95,10 +98,21 @@ internal fun PreferenceItem(
                         }
                     },
                     titleStyle = MaterialTheme.typography.titleLarge.copy(fontSize = TitleFontSize),
-                    modifier = Modifier.padding(
-                        horizontal = PrefsHorizontalPadding,
-                        vertical = PrefsVerticalPadding,
-                    ),
+                    modifier = Modifier
+                        .padding(
+                            horizontal = PrefsHorizontalPadding,
+                            vertical = PrefsVerticalPadding,
+                        )
+                        .combinedClickable(
+                            onClick = {},
+                            onLongClick = {
+                                item.defaultValue?.let { default ->
+                                    scope.launch {
+                                        item.onValueChanged(default)
+                                    }
+                                }
+                            },
+                        ),
                 )
             }
             is Preference.PreferenceItem.ListPreference<*> -> {

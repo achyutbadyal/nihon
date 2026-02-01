@@ -34,6 +34,7 @@ import kotlin.math.min
 class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = true) : Viewer {
 
     val downloadManager: DownloadManager by injectLazy()
+    private val preferences: ReaderPreferences by injectLazy()
 
     private val scope = MainScope()
 
@@ -211,7 +212,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         activity.onPageSelected(page)
 
         // Preload next chapter once we're within the last 5 pages of the current chapter
-        val inPreloadRange = pages.size - page.number < 5
+        val inPreloadRange = pages.size - page.number < preferences.preloadChapterThreshold().get()
         if (inPreloadRange && allowPreload && page.chapter == adapter.currentChapter) {
             logcat { "Request preload next chapter because we're at page ${page.number} of ${pages.size}" }
             val nextItem = adapter.items.getOrNull(adapter.items.size - 1)
