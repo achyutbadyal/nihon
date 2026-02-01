@@ -14,7 +14,7 @@ android {
                 kotlin.srcDirs("src/firebase/kotlin")
             } else {
                 kotlin.srcDirs("src/noop/kotlin")
-                manifest.srcFile("src/noop/AndroidManifext.xml")
+                manifest.srcFile("src/noop/AndroidManifest.xml")
             }
         }
     }
